@@ -15,11 +15,21 @@
 
     <section id="introduction">
         <h2>Introduction / Background</h2>
-        <p>Clash Royale is a real-time strategy mobile game developed by Supercell, blending elements of collectible card games, 
-        tower defense, and multiplayer online battle arenas. A major part of its gameplay is building decks of eight cards from 
-        over a hundred choices. It is imperative for Clash Royale players to understand what the most commonly used decks in the 
-        game are so that they can be prepared, as well as what decks can easily defeat other decks.</p>
-        <p><a href="https://supercell.com/en/games/clashroyale/">Clash Royale Website</a></p>
+        <p>Clash Royale is a real-time strategy mobile game developed by Supercell, where players create decks of eight cards 
+            from over a hundred choices. It is imperative for Clash Royale players to understand what the most commonly used 
+            decks in the game are so that they can be prepared.</p>
+        <p><a href="https://supercell.com/en/games/clashroyale/">Link to Clash Royale Website</a></p>
+        <b>Literature Review</b>
+        <p>One paper discusses how to best select a small subset of data that can efficiently train a deck win rate prediction model 
+        – useful to us given the size of our dataset [1]. Another paper tries finding players with similar profiles, then grouping
+        together their most played decks [2]. Yet another approach learns the meaning of card descriptions using NLP, in order to 
+        predict what cards work well together or could replace each other [3]. Interestingly, there is potential that a model for
+        Clash Royale can expand to other deck-building games; frameworks like SENSEI aim to do so [4].</p>
+        <b>Dataset Description</b>
+        <p>Our dataset consists of data on almost 40 million randomly selected battles during Clash Royale’s 18th season. For each battle, 
+        there is data on the name, level, and rarity of each card in either player’s decks, as well as which deck won and which lost. 
+        There is also data on which cards are in the game, as well as which cards are considered win conditions, or “wincons”.</p>
+        <p><a href="https://www.kaggle.com/datasets/bwandowando/clash-royale-season-18-dec-0320-dataset?resource=download">Link to Kaggle Dataset</a></p>
     </section>
 
     <section id="problem-definition">
@@ -40,29 +50,29 @@
         </ul>
         <h4>Machine Learning Methods</h4>
         <ul>
-            <li><b>KMeans: </b>The nature of our meta identification problem requires an unsupervised method since our dataset does not contain truth information on common card combinations (i.e. pekka-double-prince). Thus, we can use KMeans to create clusters of similarly constructed decks.</li>
-            <li><b>GMM: </b>In the event that KMeans does not perform well, we may need to fit our model to clusters with a non-circular shape. In this event, utilizing GMM can help us better match our data and come up with more refined card metas.</li>
-            <li><b>Random Forest: </b>Our battle prediction problem calls for supervised learning, as our dataset contains ground truth labels with the match outcomes between decks. We can train a Random Forest model with our available match data to predict these outcomes.</li>
+            <li><b>KMeans: </b>The nature of our meta identification problem requires an unsupervised method since our dataset does not contain truth information on common card combinations. Thus, we can use KMeans to create clusters of similarly constructed decks.</li>
+            <li><b>GMM: </b>In the event that KMeans does not perform well, we may need to fit our model to clusters with a non-circular shape.</li>
+            <li><b>Random Forest: </b>Our battle prediction problem calls for supervised learning using Random Forests, as our dataset contains ground truth labels with the match outcomes between decks.</li>
         </ul>
     </section>
 
     <section id="results">
         <h2>Results and Discussion</h2>
-        <p><b>Metrics</b></p>
+        <b>Metrics</b>
         <ul>
-            <li><p>Silhouette Coefficient: Measures how well a data point fits into its own cluster when compared to other clusters.</p></li>
-            <li><p>Davies-Bouldwin Index: Measures how tightly compact a cluster is and how separated a cluster is from other clusters.</p></li>
-            <li><p>Accuracy, Precision, Recall: General metrics that test how our model can detect real match outcomes.</p></li>
+            <li><b>Silhouette Coefficient: </b>Measures how well a data point fits into its own cluster when compared to other clusters.</li>
+            <li><b>Davies-Bouldwin Index: </b>Measures how tightly compact a cluster is and how separated a cluster is from other clusters.</li>
+            <li><b>Accuracy, Precision, Recall: </b>General metrics that test how our model can detect real match outcomes.</li>
         </ul>
-        <p><b>Project Goals</b></p>
-        <p>In this project, we are aiming to create models that will benefit the general Clash Royale player base. Detecting deck metas and 
-        determining how certain decks perform against others is paramount to creating a sustainable competitive experience. Additionally, we 
-        will take ethical considerations to be at the forefront of our process, including hiding sensitive data and ensuring data protection. 
+        <b>Project Goals</b>
+        <p>In this project, we are aiming to create models that will benefit the general Clash Royale player base. Detecting deck metas 
+        is paramount to creating a sustainable competitive experience. Additionally, we will consider ethical implications by hiding 
+        sensitive data and ensuring data protection. 
         </p>
-        <p><b>Expected Outcomes</b></p>
+        <b>Expected Outcomes</b>
         <ul>
-            <li><p>Hoping that model clusters cards together that were real meta archetypes in season 18</p></li>
-            <li><p>Predicting accurate match outcomes, in accordance with how different decks counter each other.</p></li>
+            <li>Hoping that model clusters cards together that were real meta archetypes in season 18</li>
+            <li>Predicting accurate match outcomes, in accordance with how different decks counter each other.</li>
         </ul>
     </section>        
 
