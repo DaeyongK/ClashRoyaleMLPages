@@ -3,52 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Proposal</title>
+    <title>ML Project Proposal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Project Proposal</h1>
-        <p>Topic: A Deep Dive into Machine Learning Methods for Predictive Analysis</p>
+        <h1>ML Project Proposal: Clash Royale</h1>
+        <p>Team 2: Andrew Dibiasio, Daeyong Kwon, Ethan Li, Henry Tang</p>
     </header>
 
     <section id="introduction">
         <h2>Introduction / Background</h2>
-        <p>Provide an introduction of your topic and literature review of related work. Briefly explain your dataset and its features, and provide a link to the dataset if possible.</p>
-        <p><a href="dataset-link-here">Link to Dataset</a></p>
+        <p>Clash Royale is a real-time strategy mobile game developed by Supercell, blending elements of collectible card games, 
+        tower defense, and multiplayer online battle arenas. A major part of its gameplay is building decks of eight cards from 
+        over a hundred choices. It is imperative for Clash Royale players to understand what the most commonly used decks in the 
+        game are so that they can be prepared, as well as what decks can easily defeat other decks.</p>
+        <p><a href="https://supercell.com/en/games/clashroyale/">Clash Royale Website</a></p>
     </section>
 
     <section id="problem-definition">
         <h2>Problem Definition</h2>
-        <p>Identify a problem and motivate the need for a solution. Clearly outline the challenges faced within the dataset or domain.</p>
+        <ul>
+            <p>1. Given two player decks, can we decide who wins and how hard they win by? (Supervised Learning)</p>
+            <p>2. What are the different metas and deck archetypes in the game? (Unsupervised Learning)</p>
+        </ul>
     </section>
 
     <section id="methods">
         <h2>Methods</h2>
-        <p>Present proposed solutions including specific data processing methods and machine learning algorithms. Elaborate on why each method will be effective. Mention specific functions/classes from libraries such as <code>scikit-learn</code>.</p>
+        <h4>Preprocessing Methods</h4>
         <ul>
-            <li>Data Preprocessing: <code>StandardScaler</code>, <code>MinMaxScaler</code></li>
-            <li>Algorithms: <code>RandomForestClassifier</code>, <code>SVM</code></li>
+            <li><b>Imbalanced Data: </b>There is a large disparity in match data between the lower and higher arenas, so, we will only sample from matches at 4000+ trophies, the main competitive trophy range from which most of our data lies.</li>
+            <li><b>Sampling Data: </b>We have a very large dataset (>5 GB), so it will be impractical to train a model with this much data. By randomly sampling data, we can obtain a much smaller subset of our dataset that is representative of all of the match data.</li>
+            <li><b>Feature Engineering: </b>Our dataset contains statistics of the cards used in each battle and the battle outcomes, however, it will be useful to have derived features that capture the pairings between certain cards.</li>
+        </ul>
+        <h4>Machine Learning Methods</h4>
+        <ul>
+            <li><b>KMeans: </b>The nature of our meta identification problem requires an unsupervised method since our dataset does not contain truth information on common card combinations (i.e. pekka-double-prince). Thus, we can use KMeans to create clusters of similarly constructed decks.</li>
+            <li><b>GMM: </b>In the event that KMeans does not perform well, we may need to fit our model to clusters with a non-circular shape. In this event, utilizing GMM can help us better match our data and come up with more refined card metas.</li>
+            <li><b>Random Forest: </b>Our battle prediction problem calls for supervised learning, as our dataset contains ground truth labels with the match outcomes between decks. We can train a Random Forest model with our available match data to predict these outcomes.</li>
         </ul>
     </section>
 
     <section id="results">
-        <h2>(Potential) Results and Discussion</h2>
-        <p>Identify several quantitative metrics to be used, such as accuracy, precision, recall, and F1-score. Present goals in terms of these metrics, and state any expected results.</p>
-    </section>
+        <h2>Results and Discussion</h2>
+        <p><b>Metrics</b></p>
+        <ul>
+            <li><p>Silhouette Coefficient: Measures how well a data point fits into its own cluster when compared to other clusters.</p></li>
+            <li><p>Davies-Bouldwin Index: Measures how tightly compact a cluster is and how separated a cluster is from other clusters.</p></li>
+            <li><p>Accuracy, Precision, Recall: General metrics that test how our model can detect real match outcomes.</p></li>
+        </ul>
+        <p><b>Project Goals</b></p>
+        <p>In this project, we are aiming to create models that will benefit the general Clash Royale player base. Detecting deck metas and 
+        determining how certain decks perform against others is paramount to creating a sustainable competitive experience. Additionally, we 
+        will take ethical considerations to be at the forefront of our process, including hiding sensitive data and ensuring data protection. 
+        </p>
+        <p><b>Expected Outcomes</b></p>
+        <ul>
+            <li><p>Hoping that model clusters cards together that were real meta archetypes in season 18</p></li>
+            <li><p>Predicting accurate match outcomes, in accordance with how different decks counter each other.</p></li>
+        </ul>
+    </section>        
 
     <section id="references">
         <h2>References</h2>
-        <ol>
-            <li>[1] A. Author, "Title of Paper," Journal Name, vol. X, no. X, pp. 123-456, Year.</li>
-            <li>[2] B. Author, "Title of Book," Publisher, Year.</li>
-            <li>[3] Dataset: "Dataset Name," Available: <a href="dataset-link-here">Dataset Link</a></li>
-        </ol>
+        <ul>
+            <li>[1] A. Janusz, Ł. Grad and M. Grzegorowski, "Clash Royale Challenge: How to Select Training Decks for Win-rate Prediction," 2019 Federated Conference on Computer Science and Information Systems (FedCSIS), Leipzig, Germany, 2019, pp. 3-6, doi: 10.15439/2019F365.</li>
+            <li>[2] L. Zang and W. Luo, "A User-based Collaborative Filtering System for Deck Recommendation in Game Clash Royale," 2022 14th International Conference on Computer Research and Development (ICCRD), Shenzhen, China, 2022, pp. 126-130, doi: 10.1109/ICCRD54409.2022.9730614.</li>
+            <li>[3] A. Janusz, Ł. Grad and D. Slęzak, "Utilizing Hybrid Information Sources to Learn Representations of Cards in Collectible Card Video Games," 2018 IEEE International Conference on Data Mining Workshops (ICDMW), Singapore, 2018, pp. 422-429, doi: 10.1109/ICDMW.2018.00069.</li>
+            <li>[4] A. Janusz, D. Slezak, S. Stawicki and K. Stencel, "SENSEI: An Intelligent Advisory System for the eSport Community and Casual Players," 2018 IEEE/WIC/ACM International Conference on Web Intelligence (WI), Santiago, Chile, 2018, pp. 754-757, doi: 10.1109/WI.2018.00010.</li>
+        </ul>
     </section>
-
+    
+    <section id="2340stuff">
+        <h2>Gantt Chart & Contributions</h2>
+        <p><a href="https://docs.google.com/spreadsheets/d/1jmYt7AdiHwgGTbRidTdefOQ8_jtbpmUOhT6csODDMPA/edit?usp=sharing">Link to Gantt Chart</a></p>
+        <img src="contributions.png" alt="Contributions">
+    </section>
     <footer>
-        <p>&copy; 2024 Your Name. All rights reserved.</p>
+        <p>&copy; 2024 ML Project.</p>
     </footer>
 </body>
 </html>
