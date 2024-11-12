@@ -44,31 +44,66 @@
         <h2>Methods</h2>
         <h4>Preprocessing Methods</h4>
         <ul>
-            <li><b>Imbalanced Data: </b>There is a large disparity in match data between the lower and higher arenas, so, we will only sample from matches at 4000+ trophies, the main competitive trophy range from which most of our data lies.</li>
             <li><b>Sampling Data: </b>We have a very large dataset (>5 GB), so it will be impractical to train a model with this much data. By randomly sampling data, we can obtain a much smaller subset of our dataset that is representative of all of the match data.</li>
-            <li><b>Feature Engineering: </b>Our dataset contains statistics of the cards used in each battle and the battle outcomes, however, it will be useful to have derived features that capture the pairings between certain cards.</li>
+            <li><b>One-Hot Encoding: </b>We decided to One-Hot Encode our Clash Royale Deck decks. This was because Clash Royale decks are composed of 8 unique cards, which are categorical by nature. So it wouldn't have made sense to use quantitative data for decks.</li>
+            <li><b>Feature Inversion: </b>The given data was formatted in the form of "Winner Deck" and "Loser Deck". Hence, there was no separate "winner" label that we could train our future supervised models for. Hence, after One-Hot encoding the sampled data, we inverted the decks and added in a winner label.</li>
+            <li><b>Feature Engineering: </b>Because we One-Hot Encoded our data, we had many features (211). Because high dimension data would be hard to use for our machine learning algorithms, we used UMAP (Uniform Manifold Approximation and Projection) to reduce our features significantly. UMAP was recommended over other feature reduction algorithms such as PCA for discrete, One-Hot encoded data like ours.</li>
         </ul>
         <h4>Machine Learning Methods</h4>
         <ul>
-            <li><b>KMeans: </b>The nature of our meta identification problem requires an unsupervised method since our dataset does not contain truth information on common card combinations. Thus, we can use KMeans to create clusters of similarly constructed decks.</li>
-            <li><b>GMM: </b>In the event that KMeans does not perform well, we may need to fit our model to clusters with a non-circular shape.</li>
-            <li><b>Random Forest: </b>Our battle prediction problem calls for supervised learning using Random Forests, as our dataset contains ground truth labels with the match outcomes between decks.</li>
+            <li><b>DBScan: </b>DBSCAN is a versatile unsupervised algorithm that fits our use case of detecting deck metas because we do not have specific ground truth labels for deck archetypes. With a practically infinite number of deck combinations, we needed DBSCAN to be able to detect deck outliers as well as use density based clustering to adaptively find similar decks and cluster them together. This specific use case is perfect for detecting arbitrary clusters as well as finding clusters that are not well seperated.</li>
         </ul>
     </section>
 
     <section id="results">
         <h2>Results and Discussion</h2>
-        <b>Metrics</b>
+        <b>Visualizations</b>
+            <p>[Image 1] DBScan Results Visualization</p>
+            <img src="DBScanVis.png" alt="dbscan">
+            <p>[Image 2] Hog 2.6</p>
+            <img src="Hog26.png" alt="hog">
+            <p>[Image 3] Strong Cards</p>
+            <img src="MidLadder.png" alt="mid">
+            <p>[Image 4] Lavaloon</p>
+            <img src="Lavaloon.png" alt="lavaloon">
+            <p>[Image 5] Golem Night Witch</p>
+            <img src="GolemNightwitch.png" alt="golem">
+            <p>[Image 6] PEKKA Bridge Spam</p>
+            <img src="PEKKABridgeSpam.png" alt="pekka">
+            <p>[Image 7] Log Bait</p>
+            <img src="LogBait.png" alt="log">
+            <p>[Image 8] Splashyard</p>
+            <img src="Splashyard.png" alt="yard">
+            <p>[Image 9] Silhouette Coefficients</p>
+            <img src="Silhouettes.png" alt="sil">
+            <p>[Image 10] Average Silhouette Score</p>
+            <img src="AvgSilhouette.png" alt="avg">
+        <b>Quantitiative Metrics</b>
         <ul>
-            <li><b>Silhouette Coefficient: </b>Measures how well a data point fits into its own cluster when compared to other clusters.</li>
-            <li><b>Davies-Bouldwin Index: </b>Measures how tightly compact a cluster is and how separated a cluster is from other clusters.</li>
-            <li><b>Accuracy, Precision, Recall: </b>General metrics that test how our model can detect real match outcomes.</li>
+            <li><b>Silhouette Coefficient: </b>The Silhouette Coefficient measures how well a data point fits into its own cluster when compared to other clusters.
+            The average Silhoutte Score for our data was 0.331 as seen by Image 10. Common deck archetypes such as Hog 2.6 [Image 2] and Log Bait [Image 7] had Silhouette Scores of 0.954
+            and 0.987 respectively. The high Silhouette Score is representative of our DBScan's strong performance. An interesting observation is that the cluster in [Image 3] had a lower
+            Silhouette Score, being 0.341. This however makes sense as this cluster is formed by the eight most popular/strong cards at the time, meaning that though they had high usage 
+            rates across all decks, the combination of cards themselves didn't necessarily form a cohesive deck.</li>
         </ul>
-        <b>Project Goals</b>
-        <p>In this project, we are aiming to create models that will benefit the general Clash Royale player base. Detecting deck metas 
-        is paramount to creating a sustainable competitive experience. Additionally, we will consider ethical implications by hiding 
-        sensitive data and ensuring data protection. 
-        </p>
+        <b>Deeper Analysis of DBScan: </b>
+            <p>The way we determined our clusters is through thresholding. Naively, we can take the 8 most popular cards, but then we risk including cards that don't receive a lot of support. 
+            For instance, if 7 cards appear 100 times within a group, but the 8th most popular card appears 20 times, we should not include that card in our deck, and instead let the remaining 
+            cards be 'wildcards' meaning that those remaining cards vary a lot from deck to deck, but they aren't required to define that deck type. We can accomplish this by applying a frequency
+            threshold and once the next most popular card falls below 75% of the previous frequency, we don't include any more cards in our current deck.</p>
+            <br>
+            <p>DB Scan performed well on our preprocessed dataset, as we were able to find and confirm every cluster's corresponding deck archetype with high Silhouette Scores.</p>
+        <b>Project Goals and Next Steps</b>
+        <ul>
+            <li>For Next Steps, we plan to continue refining our implementation and perhaps looking into fine tuning the hyper parameters of our algorithm to find more specific deck clusters. 
+            Our largest cluster, cluster 0, is currently just the 8 most commonly played cards from 2021, meaning there is too much parity in the way our algorithm selects clusters. If we are 
+            able to detect more clusters, with high confidence, then we can find more popular or niche deck archetypes. We also intend on looking into Supervised methods.</li>
+        </ul>
+        <ul>
+            <li>In this project, we are aiming to create models that will benefit the general Clash Royale player base. Detecting deck metas 
+            is paramount to creating a sustainable competitive experience. Additionally, we will consider ethical implications by hiding 
+            sensitive data and ensuring data protection.</li>
+        </ul>
         <b>Expected Outcomes</b>
         <ul>
             <li>Hoping that model clusters cards together that were real meta archetypes in season 18</li>
@@ -89,7 +124,7 @@
     <section id="2340stuff">
         <h2>Gantt Chart & Contributions</h2>
         <p><a href="https://docs.google.com/spreadsheets/d/1jmYt7AdiHwgGTbRidTdefOQ8_jtbpmUOhT6csODDMPA/edit?usp=sharing">Link to Gantt Chart</a></p>
-        <img src="contributions.png" alt="Contributions">
+        <img src="contributions2.png" alt="Contributions">
     </section>
     <footer>
         <p>&copy; 2024 ML Project.</p>
